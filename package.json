@@ -1,0 +1,21 @@
+{
+  "name": "matrix-multiplication-web",
+  "version": "1.0.0",
+  "description": "A web application for multiplying matrices with user input.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "matrix",
+    "multiplication",
+    "web",
+    "application"
+  ],
+  "author": "Your Name",
+  "license": "ISC"
+}

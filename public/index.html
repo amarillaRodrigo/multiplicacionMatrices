@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplicación de Matrices</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Multiplicación de Matrices</h1>
+        <form id="matrix-form">
+            <div>
+                <label for="rowsA">Filas de la Matriz A:</label>
+                <input type="number" id="rowsA" required>
+            </div>
+            <div>
+                <label for="colsA">Columnas de la Matriz A:</label>
+                <input type="number" id="colsA" required>
+            </div>
+            <div>
+                <label for="rowsB">Filas de la Matriz B:</label>
+                <input type="number" id="rowsB" required>
+            </div>
+            <div>
+                <label for="colsB">Columnas de la Matriz B:</label>
+                <input type="number" id="colsB" required>
+            </div>
+            <button type="button" id="generateInputs">Generar Matrices</button>
+        </form>
+        <div id="matrixInputs"></div>
+        <button id="calculate">Calcular Producto</button>
+        <div id="result"></div>
+    </div>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

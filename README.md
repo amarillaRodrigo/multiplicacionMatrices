@@ -1,7 +1,6 @@
 # Matrix Multiplication Web
 
 Este proyecto es una aplicación web que permite a los usuarios ingresar datos para resolver la multiplicación de dos matrices. La aplicación incluye formularios para que los usuarios especifiquen el número de filas y columnas de las matrices, así como los elementos de las matrices. Una vez ingresados los datos, el servidor realiza la multiplicación y muestra el resultado en la interfaz.
-```
 
 ## Instalación
 
@@ -36,10 +35,3 @@ El servidor escuchará en el puerto 3000. Puedes acceder a la aplicación web ab
 3. Haz clic en el botón para multiplicar las matrices.
 4. El resultado se mostrará en la interfaz.
 
-## Contribuciones
-
-Las contribuciones son bienvenidas. Si deseas contribuir, por favor abre un issue o envía un pull request.
-
-## Licencia
-
-Este proyecto está bajo la Licencia MIT.

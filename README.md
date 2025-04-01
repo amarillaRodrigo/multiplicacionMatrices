@@ -2,25 +2,6 @@
 
 Este proyecto es una aplicación web que permite a los usuarios ingresar datos para resolver la multiplicación de dos matrices. La aplicación incluye formularios para que los usuarios especifiquen el número de filas y columnas de las matrices, así como los elementos de las matrices. Una vez ingresados los datos, el servidor realiza la multiplicación y muestra el resultado en la interfaz.
 
-## Estructura del Proyecto
-
-```
-matrix-multiplication-web
-├── public
-│   ├── index.html          # Estructura HTML de la página principal
-│   ├── styles
-│   │   └── style.css       # Estilos CSS para la interfaz del usuario
-│   └── scripts
-│       └── app.js          # Código JavaScript del lado del cliente
-├── src
-│   ├── server.js           # Punto de entrada del servidor
-│   └── utils
-│       └── matrixOperations.js # Funciones para la multiplicación de matrices
-├── package.json             # Configuración de npm y dependencias
-├── .gitignore               # Archivos y carpetas a ignorar por Git
-└── README.md                # Documentación del proyecto
-```
-
 ## Instalación
 
 1. Clona el repositorio en tu máquina local:

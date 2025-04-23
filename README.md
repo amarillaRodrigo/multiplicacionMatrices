@@ -23,7 +23,7 @@ Este proyecto es una aplicación web que permite a los usuarios ingresar datos p
 
 Para iniciar el servidor, ejecuta el siguiente comando en la terminal:
 ```
-node src/server.js
+npm start
 ```
 
 El servidor escuchará en el puerto 3000. Puedes acceder a la aplicación web abriendo tu navegador y dirigiéndote a `http://localhost:3000`.

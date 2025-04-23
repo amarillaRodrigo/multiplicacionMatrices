@@ -1,7 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-const { multiplyMatrices } = require("./utils/matrixOperations");
+const { multiplyMatrices, multiplyMatricesTF } = require("./utils/matrixOperations");
 
 const server = http.createServer((req, res) => {
   if (req.method === "POST" && req.url === "/multiply") {
@@ -16,6 +16,34 @@ const server = http.createServer((req, res) => {
       const result = multiplyMatrices(matrixA, matrixB);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ result }));
+    });
+  } else if (req.method === "POST" && req.url === "/multiply-tf") {
+    let body = "";
+
+    req.on("data", chunk => {
+      body += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      try {
+        const { rowsA, colsA, colsB } = JSON.parse(body);
+        
+        if (!rowsA || !colsA || !colsB || 
+            rowsA <= 0 || colsA <= 0 || colsB <= 0) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ 
+            error: "Dimensiones inválidas. Asegúrate de proporcionar valores positivos." 
+          }));
+          return;
+        }
+        
+        const result = await multiplyMatricesTF(Number(rowsA), Number(colsA), Number(colsB));
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(result));
+      } catch (error) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: error.message }));
+      }
     });
   } else {
     let filePath = path.join(

@@ -1,3 +1,5 @@
+const tf = require('@tensorflow/tfjs');
+
 function multiplyMatrices(matrixA, matrixB) {
   const rowsA = matrixA.length;
   const colsA = matrixA[0].length;
@@ -21,6 +23,54 @@ function multiplyMatrices(matrixA, matrixB) {
   return result;
 }
 
+/**
+ @param {number} rows 
+ @param {number} cols 
+ @returns {tf.Tensor2D} 
+ */
+
+function generateRandomMatrix(rows, cols) {
+  
+  const randomMatrix = tf.randomUniform([rows, cols]);
+  return tf.tidy(() => {
+    return tf.add(tf.mul(randomMatrix, 19), 1).floor();
+  });
+}
+
+/**
+ 
+ * @param {number} rowsA 
+ * @param {number} colsA 
+ * @param {number} colsB 
+ * @returns {Object} 
+ */
+
+async function multiplyMatricesTF(rowsA, colsA, colsB) {
+  try {
+
+    const rowsB = colsA;
+    const matrixA = generateRandomMatrix(rowsA, colsA);
+    const matrixB = generateRandomMatrix(rowsB, colsB);
+    
+    const resultMatrix = tf.matMul(matrixA, matrixB);
+    
+    const matrixAData = await matrixA.array();
+    const matrixBData = await matrixB.array();
+    const resultData = await resultMatrix.array();
+    
+    tf.dispose([matrixA, matrixB, resultMatrix]);
+    
+    return {
+      matrixA: matrixAData,
+      matrixB: matrixBData,
+      result: resultData
+    };
+  } catch (error) {
+    throw new Error(`Error en la multiplicación de matrices: ${error.message}`);
+  }
+}
+
 module.exports = {
   multiplyMatrices,
+  multiplyMatricesTF
 };

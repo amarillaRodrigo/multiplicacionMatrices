@@ -35,3 +35,10 @@ El servidor escuchará en el puerto 3000. Puedes acceder a la aplicación web ab
 3. Haz clic en el botón para multiplicar las matrices.
 4. El resultado se mostrará en la interfaz.
 
+## Contribuciones
+
+Las contribuciones son bienvenidas. Si deseas contribuir, por favor abre un issue o envía un pull request.
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT.

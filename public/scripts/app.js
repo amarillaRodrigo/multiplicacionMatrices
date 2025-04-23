@@ -1,116 +1,78 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("matrix-form");
-  const resultArea = document.getElementById("result");
-  const generateInputsButton = document.getElementById("generateInputs");
-  const matrixInputsContainer = document.getElementById("matrixInputs");
-  const calculateButton = document.getElementById("calculate");
-
-  if (!form) {
-    console.error(
-      "El formulario con ID 'matrix-form' no se encontró en el DOM."
-    );
+  const generateAndCalculateBtn = document.getElementById("generateAndCalculate");
+  const matrixADisplay = document.querySelector("#matrixADisplay .matrix-content");
+  const matrixBDisplay = document.querySelector("#matrixBDisplay .matrix-content");
+  const resultDisplay = document.querySelector("#resultDisplay .matrix-content");
+  
+  if (!form || !generateAndCalculateBtn) {
+    console.error("No se encontraron elementos fundamentales en el DOM.");
     return;
   }
-
-  // Evento para generar los campos de entrada de las matrices
-  generateInputsButton.addEventListener("click", () => {
+  
+  generateAndCalculateBtn.addEventListener("click", async () => {
     const rowsA = parseInt(document.getElementById("rowsA").value);
     const colsA = parseInt(document.getElementById("colsA").value);
-    const rowsB = parseInt(document.getElementById("rowsB").value);
     const colsB = parseInt(document.getElementById("colsB").value);
-
-    if (isNaN(rowsA) || isNaN(colsA) || isNaN(rowsB) || isNaN(colsB)) {
-      resultArea.innerHTML =
-        "Por favor, ingresa valores válidos para las dimensiones.";
+    
+    if (isNaN(rowsA) || isNaN(colsA) || isNaN(colsB) || 
+        rowsA <= 0 || colsA <= 0 || colsB <= 0) {
+      alert("Por favor, ingresa dimensiones válidas para las matrices (valores positivos).");
       return;
     }
-
-    if (colsA !== rowsB) {
-      resultArea.innerHTML =
-        "Error: El número de columnas de la Matriz A debe ser igual al número de filas de la Matriz B.";
+    
+    try {
+      document.body.classList.add("loading");
+      
+      const response = await fetch("/multiply-tf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rowsA, colsA, colsB }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error en la solicitud al servidor");
+      }
+      
+      const data = await response.json();
+      
+      displayMatrix(matrixADisplay, data.matrixA);
+      displayMatrix(matrixBDisplay, data.matrixB);
+      displayMatrix(resultDisplay, data.result);
+      
+      document.getElementById("result-container").style.display = "block";
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    } finally {
+      document.body.classList.remove("loading");
+    }
+  });
+  
+  function displayMatrix(container, matrix) {
+    container.innerHTML = "";
+    
+    if (!matrix || matrix.length === 0) {
+      container.innerHTML = "<p>No hay datos disponibles</p>";
       return;
     }
-
-    // Limpiar el contenedor de entradas
-    matrixInputsContainer.innerHTML = "";
-
-    // Generar campos para la Matriz A
-    const matrixAContainer = document.createElement("div");
-    matrixAContainer.innerHTML = `<h3>Matriz A</h3>`;
-    for (let i = 0; i < rowsA; i++) {
-      const row = document.createElement("div");
-      for (let j = 0; j < colsA; j++) {
-        const input = document.createElement("input");
-        input.type = "number";
-        input.id = `matrixA-${i}-${j}`;
-        input.placeholder = `A[${i}][${j}]`;
-        row.appendChild(input);
+    
+    const table = document.createElement("table");
+    
+    for (let i = 0; i < matrix.length; i++) {
+      const row = document.createElement("tr");
+      
+      for (let j = 0; j < matrix[i].length; j++) {
+        const cell = document.createElement("td");
+        cell.textContent = matrix[i][j];
+        row.appendChild(cell);
       }
-      matrixAContainer.appendChild(row);
+      
+      table.appendChild(row);
     }
-    matrixInputsContainer.appendChild(matrixAContainer);
-
-    // Generar campos para la Matriz B
-    const matrixBContainer = document.createElement("div");
-    matrixBContainer.innerHTML = `<h3>Matriz B</h3>`;
-    for (let i = 0; i < rowsB; i++) {
-      const row = document.createElement("div");
-      for (let j = 0; j < colsB; j++) {
-        const input = document.createElement("input");
-        input.type = "number";
-        input.id = `matrixB-${i}-${j}`;
-        input.placeholder = `B[${i}][${j}]`;
-        row.appendChild(input);
-      }
-      matrixBContainer.appendChild(row);
-    }
-    matrixInputsContainer.appendChild(matrixBContainer);
-  });
-
-  // Evento para calcular el producto de las matrices
-  calculateButton.addEventListener("click", async () => {
-    const rowsA = parseInt(document.getElementById("rowsA").value);
-    const colsA = parseInt(document.getElementById("colsA").value);
-    const rowsB = parseInt(document.getElementById("rowsB").value);
-    const colsB = parseInt(document.getElementById("colsB").value);
-
-    const matrixA = getMatrixInput("matrixA", rowsA, colsA);
-    const matrixB = getMatrixInput("matrixB", rowsB, colsB);
-
-    const response = await fetch("/multiply", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ matrixA, matrixB }),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      displayResult(result);
-    } else {
-      resultArea.innerHTML = "Error al multiplicar las matrices.";
-    }
-  });
-
-  function getMatrixInput(matrixId, rows, cols) {
-    const matrix = [];
-    for (let i = 0; i < rows; i++) {
-      const row = [];
-      for (let j = 0; j < cols; j++) {
-        const value = parseFloat(
-          document.getElementById(`${matrixId}-${i}-${j}`).value
-        );
-        row.push(isNaN(value) ? 0 : value);
-      }
-      matrix.push(row);
-    }
-    return matrix;
-  }
-
-  function displayResult(result) {
-    resultArea.innerHTML = "<h2>Resultado de la multiplicación:</h2>";
-    resultArea.innerHTML +=
-      "<pre>" + JSON.stringify(result.result, null, 2) + "</pre>";
+    
+    container.appendChild(table);
   }
 });
